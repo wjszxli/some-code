@@ -7,10 +7,10 @@ interface IArrayNode {
 interface ITreeNode {
   id: string | number;
   name: string;
-  children?: ITreeNode[];
+  children: ITreeNode[];
 }
 
-export function arrayToTree(arrayList: IArrayNode[] = []) {
+export function arrayToTree(arrayList: IArrayNode[]) {
   if (arrayList.length === 0) {
     return {};
   }
@@ -25,13 +25,16 @@ export function arrayToTree(arrayList: IArrayNode[] = []) {
     if (item.parentId === null) {
       tree[item.id] = node;
     } else {
-        const parent = nodeMap.get(item.parentId);
-        if (parent) {
-        parent.children = parent.children || [];
+      const parent = nodeMap.get(item.parentId);
+      if (parent) {
         parent.children.push(node);
-      }else {
+      } else {
         // 如果父节点还未创建，则创建空父节点并加入
-        const newParent: ITreeNode = { id: item.parentId, name: '', children: [node] };
+        const newParent: ITreeNode = {
+          id: item.parentId,
+          name: "",
+          children: [node],
+        };
         nodeMap.set(item.parentId, newParent);
       }
     }
