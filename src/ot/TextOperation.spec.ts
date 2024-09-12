@@ -115,4 +115,45 @@ describe("TextOperation", () => {
     expect(3).toEqual(operation.ops.length);
     expect(-2).toEqual(last(operation.ops));
   });
+
+  it("test is noop", () => {
+    const operator = new TextOperation();
+    expect(true).toEqual(operator.isNoop());
+
+    operator.retain(5);
+    expect(true).toEqual(operator.isNoop());
+
+    operator.retain(3);
+    expect(true).toEqual(operator.isNoop());
+
+    operator.insert("abc");
+    expect(false).toEqual(operator.isNoop());
+  });
+
+  it("test to string", () => {
+    const operator = new TextOperation();
+    operator.retain(2);
+
+    expect("").toEqual(operator.toString());
+
+    operator.insert("lorem");
+    operator.delete("ipsum");
+    operator.retain(5);
+
+    expect("retain(2), insert('lorem'), delete(5), retain(5)").toEqual(
+      operator.toString()
+    );
+  });
+
+  it("test random operation", () => {
+    const text = randomString(50);
+    const operator = randomOperation(text);
+    expect(text.length).toEqual(operator.baseLength);
+  });
+
+  it("test is to json", () => {
+    const text = randomString(50);
+    const operator = randomOperation(text);
+    expect(text.length).toEqual(operator.toJson());
+  });
 });

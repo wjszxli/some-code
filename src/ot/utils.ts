@@ -1,32 +1,36 @@
 import { TextOperation } from "./TextOperation";
 
-export const randomString = (n: number) => {
-  var str = "";
+function randomInt(n: number) {
+  return Math.floor(Math.random() * n);
+}
+
+export function randomString(n: number) {
+  let str = "";
   while (n--) {
     if (Math.random() < 0.15) {
       str += "\n";
     } else {
-      var chr = Math.random() + 97;
+      const chr = randomInt(26) + 97;
       str += String.fromCharCode(chr);
     }
   }
   return str;
-};
+}
 
-export const randomOperation = (str: string) => {
-  var operation = new TextOperation();
-  var left;
+export function randomOperation(str: string) {
+  const operation = new TextOperation();
+  let left;
   while (true) {
     left = str.length - operation.baseLength;
     if (left === 0) {
       break;
     }
-    var r = Math.random();
-    var l = 1 + Math.random();
+    const r = Math.random();
+    const l = 1 + randomInt(Math.min(left - 1, 20));
     if (r < 0.2) {
       operation.insert(randomString(l));
     } else if (r < 0.4) {
-      operation.delete(l);
+      operation.delete(l)
     } else {
       operation.retain(l);
     }
@@ -35,4 +39,4 @@ export const randomOperation = (str: string) => {
     operation.insert(1 + randomString(10));
   }
   return operation;
-};
+}

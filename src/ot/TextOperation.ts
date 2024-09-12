@@ -17,6 +17,13 @@ export class TextOperation {
     return typeof n === "number" && n < 0;
   }
 
+  isNoop() {
+    return (
+      this.ops.length === 0 ||
+      (this.ops.length === 1 && this.isRetain(this.ops[0]))
+    );
+  }
+
   getLastOp(): TOpsItem {
     return this.ops[this.ops.length - 1];
   }
@@ -86,5 +93,34 @@ export class TextOperation {
     }
 
     return this;
+  }
+
+  toJson() {
+    return this.ops;
+  }
+
+  toString() {
+    if (this.isNoop()) return "";
+
+    return this.ops
+      .map((op) => {
+        if (this.isRetain(op)) {
+          return `retain(${op})`;
+        } else if (this.isInsert(op)) {
+          return `insert('${op}')`;
+        } else {
+          return `delete(${-op})`;
+        }
+      })
+      .join(", ");
+  }
+
+  fromJSON(ops: TOpsItem[]) {
+    const operator = new TextOperation();
+    this.ops.forEach((op) => {
+      if (this.isRetain(op)) {
+        operator.retain(op as number);
+      }
+    });
   }
 }
