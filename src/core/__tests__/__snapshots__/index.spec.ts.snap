@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createForm values 1`] = `
+{
+  "": {
+    "displayName": "FormState",
+    "editable": true,
+    "errors": [],
+    "initialValues": {},
+    "initialized": true,
+    "invalid": false,
+    "loading": false,
+    "modified": true,
+    "mounted": false,
+    "submitting": false,
+    "unmounted": false,
+    "valid": true,
+    "validating": false,
+    "values": {
+      "aa": 111,
+      "bb": 222,
+    },
+    "warnings": [],
+  },
+}
+`;

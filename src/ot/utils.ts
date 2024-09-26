@@ -30,7 +30,7 @@ export function randomOperation(str: string) {
     if (r < 0.2) {
       operation.insert(randomString(l));
     } else if (r < 0.4) {
-      operation.delete(l)
+      operation.delete(l);
     } else {
       operation.retain(l);
     }

@@ -154,6 +154,62 @@ describe("TextOperation", () => {
   it("test is to json", () => {
     const text = randomString(50);
     const operator = randomOperation(text);
-    expect(text.length).toEqual(operator.toJson());
+    expect(operator).toEqual(TextOperation.fromJSON(operator.toJson()));
+  });
+
+  it("test from json", () => {
+    const ops = [2, -1, -1, "cde"];
+    const operator = TextOperation.fromJSON(ops);
+    expect(3).toEqual(operator.ops.length);
+    expect(4).toEqual(operator.baseLength);
+    expect(5).toEqual(operator.targetLength);
+  });
+
+  it("testShouldBeComposedWith", () => {
+    const make = () => {
+      return new TextOperation();
+    };
+
+    let operator1 = make().retain(3);
+    let operator2 = make().retain(1).insert("tag").retain(2);
+
+    expect(true).toEqual(operator1.shouldBeComposedWith(operator2));
+    expect(true).toEqual(operator2.shouldBeComposedWith(operator1));
+
+    operator1 = make().retain(1).insert("a").retain(2);
+    operator2 = make().retain(2).insert("b").retain(2);
+    let result = operator1.shouldBeComposedWith(operator2);
+    expect(true).toEqual(result);
+    operator1.delete(3);
+    result = operator1.shouldBeComposedWith(operator2);
+    expect(false).toEqual(result);
+
+    operator1 = make().retain(1).insert("b").retain(2);
+    operator2 = make().retain(1).insert("a").retain(3);
+    result = operator1.shouldBeComposedWith(operator2);
+    expect(false).toEqual(result);
+
+    operator1 = make().retain(4).delete(3).retain(10);
+    operator2 = make().retain(2).delete(2).retain(10);
+    result = operator1.shouldBeComposedWith(operator2);
+    expect(true).toEqual(result);
+
+    operator1 = make().retain(4).delete(7).retain(3);
+    result = operator1.shouldBeComposedWith(operator2);
+    expect(true).toEqual(result);
+
+    operator2 = make().retain(2).delete(9).retain(3);
+    result = operator1.shouldBeComposedWith(operator2);
+    expect(false).toEqual(result);
+  });
+
+  it("test should be composed with inverted", () => {
+    const text = randomString(50);
+    const operator1 = randomOperation(text);
+    const operator1Inv = operator1.invert(text);
+    const afterOperator1 = operator1Inv.apply(text);
+    const operator2 = randomOperation(afterOperator1);
+    const operator2Inv = operator2.invert(afterOperator1);
+    // expect(operator1.shouldBeComposedWith(operator2Inv)).toEqual(operator2Inv.shouldBeComposedWithInverted(operator1Inv));
   });
 });
