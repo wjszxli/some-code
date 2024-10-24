@@ -1,4 +1,6 @@
-const shallowEqual = (a: any, b: any) => {
+import { IsEqual } from "./type";
+
+const shallowEqual: IsEqual = (a: any, b: any) => {
   if (a === b) return true;
 
   if (typeof a !== "object" || !a || typeof b !== "object" || !b) {

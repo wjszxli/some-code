@@ -1,14 +1,14 @@
 import { fieldSubscriptionItems } from "./constants";
 import subscriptionFilter from "./subscriptionFilter";
-import { FieldState, FieldSubscription } from "./type";
+import { FieldState, StateFilter } from "./type";
 
 const shallowEqualKeys = ["data"];
 
-const filterFieldState = (
-  state: FieldState,
-  subscription: FieldSubscription,
-  force: boolean,
-  previousState?: FieldState
+const filterFieldState: StateFilter<FieldState> = (
+  state,
+  subscription,
+  force,
+  previousState
 ) => {
   const result: FieldState = {
     blur: state.blur,
@@ -21,10 +21,10 @@ const filterFieldState = (
     subscriptionFilter(
       result,
       state,
-      previousState,
       subscription,
       fieldSubscriptionItems,
-      shallowEqualKeys
+      shallowEqualKeys,
+      previousState
     ) || !previousState;
   return different || force ? result : undefined;
 };

@@ -1,9 +1,14 @@
 import { ARRAY_ERROR } from "./constants";
 import getIn from "./structure/getIn";
-import { FieldState, InternalFieldState, InternalFormState } from "./type";
+import {
+  FieldState,
+  FormValuesShape,
+  InternalFieldState,
+  InternalFormState,
+} from "./type";
 
-function publishFieldState(
-  formState: InternalFormState,
+function publishFieldState<FormValues extends FormValuesShape>(
+  formState: InternalFormState<FormValues>,
   field: InternalFieldState
 ): FieldState {
   const {

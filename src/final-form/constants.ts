@@ -1,5 +1,6 @@
 export const FORM_ERROR = "FINAL_FORM/form-error";
 export const ARRAY_ERROR = "FINAL_FORM/array-error";
+
 export const fieldSubscriptionItems = [
   "active",
   "data",
@@ -21,4 +22,31 @@ export const fieldSubscriptionItems = [
   "value",
   "visited",
   "validating",
+];
+
+export const formSubscriptionItems = [
+  "active",
+  "dirty",
+  "dirtyFields",
+  "dirtyFieldsSinceLastSubmit",
+  "dirtySinceLastSubmit",
+  "error",
+  "errors",
+  "hasSubmitErrors",
+  "hasValidationErrors",
+  "initialValues",
+  "invalid",
+  "modified",
+  "modifiedSinceLastSubmit",
+  "pristine",
+  "submitting",
+  "submitError",
+  "submitErrors",
+  "submitFailed",
+  "submitSucceeded",
+  "touched",
+  "valid",
+  "validating",
+  "values",
+  "visited",
 ];

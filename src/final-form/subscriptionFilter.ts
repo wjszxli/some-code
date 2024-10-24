@@ -1,16 +1,17 @@
 import shallowEqual from "./shallowEqual";
 
-export default function (
-  dest: any,
-  src: any,
-  previous: any,
+export default function <T extends { [key: string]: any }>(
+  dest: T,
+  src: T,
   subscription: { [key: string]: boolean },
   keys: string[],
-  shallowEqualKeys: string[]
+  shallowEqualKeys: string[],
+  previous?: T
 ): boolean {
   let different = false;
   keys.forEach((key) => {
     if (subscription[key]) {
+      // @ts-ignore
       dest[key] = src[key];
       if (
         !previous ||

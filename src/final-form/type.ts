@@ -1,18 +1,22 @@
-export type Subscriber = (value: any) => void;
+export type Subscriber<V> = (value: V) => void;
 export type Subscription = { [key: string]: boolean };
 export type IsEqual = (a: any, b: any) => boolean;
 
-export type DebugFunction = (
-  state: FormState,
+export type DebugFunction<FormValues extends FormValuesShape> = (
+  state: FormState<FormValues>,
   fieldStates: { [key: string]: FieldState }
 ) => void;
 
-export type StateFilter = (
-  state: FormState,
+export type FormValuesShape = {
+  [key: string]: any;
+};
+
+export type StateFilter<T> = (
+  state: T,
   subscription: Subscription,
   force: boolean,
-  previousState?: FormState
-) => FormState;
+  previousState?: T
+) => T | undefined;
 
 export type FieldSubscription = {
   active?: boolean;
@@ -63,8 +67,8 @@ export type FormApi = {
   // ) => Unsubscribe,
 };
 
-export type Config = {
-  debug?: DebugFunction;
+export type Config<FormValues extends FormValuesShape> = {
+  debug?: DebugFunction<FormValues>;
   destroyOnUnregister?: boolean;
   initialValues?: FormValues;
   keepDirtyOnReinitialize?: boolean;
@@ -147,7 +151,7 @@ export type FieldConfig = {
   validateFields?: string[];
 };
 
-export type InternalFormState = {
+export type InternalFormState<FormValues extends FormValuesShape> = {
   active?: string;
   asyncErrors: Object;
   dirtySinceLastSubmit: boolean;
@@ -172,7 +176,7 @@ export type FormValues = {
   [key: string]: any;
 };
 
-export type FormState = {
+export type FormState<FormValues extends FormValuesShape> = {
   // 所有的值都可选的，因为必须被订阅
   active?: string;
   dirty?: boolean;
@@ -199,25 +203,82 @@ export type FormState = {
   values?: FormValues;
   visited?: { [key: string]: boolean };
 };
-export type Subscribers = {
+export type Subscribers<T extends Object> = {
   index: number;
   entries: {
     [key: number]: {
-      subscriber: Subscriber;
+      subscriber: Subscriber<T>;
       notified: boolean;
       subscription: Subscription;
     };
   };
 };
 
-export interface InternalState {
-  subscribers: Subscribers;
+export type InternalState<FormValues extends FormValuesShape> = {
+  subscribers: Subscribers<FormState<FormValues>>;
+  lastFormState?: FormState<FormValues>;
   fieldSubscribers: {
-    [key: string]: Subscribers;
+    [key: string]: Subscribers<FieldState>;
   };
   fields: {
     [key: string]: InternalFieldState;
   };
-  lastFormState?: FormState;
-  formState: InternalFormState;
-}
+  formState: InternalFormState<FormValues>;
+};
+
+export type FormSubscription = {
+  active?: boolean;
+  dirty?: boolean;
+  dirtyFields?: boolean;
+  dirtyFieldsSinceLastSubmit?: boolean;
+  dirtySinceLastSubmit?: boolean;
+  error?: boolean;
+  errors?: boolean;
+  hasSubmitErrors?: boolean;
+  hasValidationErrors?: boolean;
+  initialValues?: boolean;
+  invalid?: boolean;
+  modified?: boolean;
+  modifiedSinceLastSubmit?: boolean;
+  pristine?: boolean;
+  submitError?: boolean;
+  submitErrors?: boolean;
+  submitFailed?: boolean;
+  submitSucceeded?: boolean;
+  submitting?: boolean;
+  touched?: boolean;
+  valid?: boolean;
+  validating?: boolean;
+  values?: boolean;
+  visited?: boolean;
+};
+
+export type Unsubscribe = () => void;
+
+export type FormSubscriber<FormValues extends FormValuesShape> = Subscriber<
+  FormState<FormValues>
+>;
+
+export type MutableState<FormValues extends FormValuesShape> = {
+  fieldSubscribers: { [key: string]: Subscribers<FieldState> };
+  fields: {
+    [key: string]: InternalFieldState;
+  };
+  formState: InternalFormState<FormValues>;
+  lastFormState?: FormState<FormValues>;
+};
+
+export type ChangeValue<FormValues extends FormValuesShape> = (
+  state: MutableState<FormValues>,
+  name: string,
+  mutate: (value: any) => any
+) => void;
+
+export type SetIn = (
+  state: Record<string, any> | Array<any>,
+  key: string,
+  value: any,
+  destroyArrays?: boolean
+) => Object;
+
+export type FieldSubscriber = Subscriber<FieldState>;
